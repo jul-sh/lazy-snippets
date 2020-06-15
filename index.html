@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta snippet="viewport" content="width=device-width, initial-scale=1" />
+    <title>lazy-snippets</title>
+    <style>
+      body,
+      html {
+        display: flex;
+        width: 100%;
+        min-height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        background-color: #fff8f8;
+        color: #111c40;
+        font-size: 20px;
+        font-family: -apple-system, Roboto, Helvetica Neue, sans-serif;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+      }
+
+      main {
+        padding: 3rem;
+      }
+
+      label,
+      textarea,
+      input {
+        display: block;
+      }
+
+      label {
+        margin-bottom: 0.25rem;
+      }
+
+      textarea,
+      input {
+        margin-bottom: 1rem;
+        width: 100%;
+      }
+    </style>
+  </head>
+
+  <body>
+    <main>
+      <p>
+        Use this tool to replace PR numbers (#1234) with GitHub links.
+      </p>
+      <form id="snippet-form">
+        <label for="name">Repo link:</label>
+        <input
+          type="text"
+          id="link"
+          name="link"
+          value="https://github.com/project-oak/oak"
+          required
+        />
+        <label for="snippet">Your snippet:</label>
+        <textarea id="snippet" name="snippet" rows="20" required></textarea>
+        <button type="submit">Convert</button>
+      </form>
+    </main>
+    <script type="module">
+      function getPrLink(repoLink, prHash) {
+        return `[${prHash}](${repoLink}/${prHash.substring(1)})`
+      }
+
+      function handleSubmit() {
+        event.preventDefault()
+
+        const repoLink = document.getElementById('link').value
+
+        const snippetTextArea = document.getElementById('snippet')
+        const snippet = snippetTextArea.value
+
+        const replacedSnippet = snippet.replace(/#[0-9]+/g, (prHash) =>
+          getPrLink(repoLink, prHash)
+        )
+
+        snippetTextArea.value = replacedSnippet
+      }
+
+      document
+        .getElementById('snippet-form')
+        .addEventListener('submit', handleSubmit)
+    </script>
+  </body>
+</html>
